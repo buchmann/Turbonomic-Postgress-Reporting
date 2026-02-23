@@ -1,0 +1,8 @@
+# Kafka client library
+kafka-python==2.0.2
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.9
+
+# JSON logging (optional but recommended)
+python-json-logger==2.0.7

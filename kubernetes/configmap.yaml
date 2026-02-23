@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-postgres-consumer-config
+  namespace: turbonomic
+  labels:
+    app: kafka-postgres-consumer
+    component: configuration
+data:
+  # Kafka Configuration
+  KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+  KAFKA_TOPIC: "turbonomic.exporter"
+  KAFKA_GROUP_ID: "turbonomic-postgres-consumer"
+  KAFKA_AUTO_OFFSET_RESET: "earliest"
+  KAFKA_MAX_POLL_RECORDS: "500"
+  KAFKA_SESSION_TIMEOUT_MS: "30000"
+  
+  # PostgreSQL Configuration
+  POSTGRES_HOST: "192.168.178.61"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DATABASE: "turbonomic_data"
+  POSTGRES_MIN_CONN: "1"
+  POSTGRES_MAX_CONN: "10"
+  
+  # Application Configuration
+  BATCH_SIZE: "100"
+  BATCH_TIMEOUT: "5"
+  MAX_RETRIES: "3"
+  RETRY_BACKOFF: "2.0"
+  LOG_LEVEL: "INFO"
+
+# Made with Bob

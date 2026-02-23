@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-postgres-consumer
+  namespace: turbonomic
+  labels:
+    app: kafka-postgres-consumer
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-postgres-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-postgres-consumer
+        version: v1
+      annotations:
+        prometheus.io/scrape: "false"  # Set to true if you add metrics
+    spec:
+      containers:
+      - name: consumer
+        image: kafka-postgres-consumer:latest  # Replace with your image
+        imagePullPolicy: IfNotPresent
+        
+        # Environment variables from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: kafka-postgres-consumer-config
+        - secretRef:
+            name: kafka-postgres-consumer-secret
+        
+        # Resource limits and requests
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        
+        # Liveness probe - checks if container is alive
+        livenessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import sys; sys.exit(0)"
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Readiness probe - checks if container is ready to serve
+        readinessProbe:
+          exec:
+            command:
+            - python
+            - -c
+            - "import sys; sys.exit(0)"
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Security context
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+      
+      # Graceful termination
+      terminationGracePeriodSeconds: 30
+      
+      # Restart policy
+      restartPolicy: Always
+      
+      # DNS policy
+      dnsPolicy: ClusterFirst
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-postgres-consumer
+  namespace: turbonomic
+  labels:
+    app: kafka-postgres-consumer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: kafka-postgres-consumer
+
+# Made with Bob
