@@ -6,3 +6,8 @@ psycopg2-binary==2.9.9
 
 # JSON logging (optional but recommended)
 python-json-logger==2.0.7
+
+# Compression libraries for Kafka
+python-snappy==0.6.1
+lz4==4.3.2
+zstandard==0.21.0

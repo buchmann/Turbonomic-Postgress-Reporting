@@ -8,8 +8,12 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc \
+    g++ \
     python3-dev \
-    libpq-dev && \
+    libpq-dev \
+    libsnappy-dev \
+    liblz4-dev \
+    libzstd-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
@@ -25,7 +29,10 @@ WORKDIR /app
 # Install runtime dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    libpq5 && \
+    libpq5 \
+    libsnappy1v5 \
+    liblz4-1 \
+    libzstd1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy Python dependencies from builder to a location accessible by all users
