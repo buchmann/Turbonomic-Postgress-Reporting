@@ -195,11 +195,11 @@ class KafkaToPostgresConsumer:
             return True
         
         insert_query = """
-            INSERT INTO kafka.kafka_messages 
-            (message_key, message_value, topic, partition, offset, timestamp, consumed_at)
-            VALUES (%(message_key)s, %(message_value)s::jsonb, %(topic)s, %(partition)s, 
+            INSERT INTO kafka.kafka_messages
+            (message_key, message_value, topic, partition, "offset", timestamp, consumed_at)
+            VALUES (%(message_key)s, %(message_value)s::jsonb, %(topic)s, %(partition)s,
                     %(offset)s, %(timestamp)s, %(consumed_at)s)
-            ON CONFLICT (topic, partition, offset) DO NOTHING
+            ON CONFLICT (topic, partition, "offset") DO NOTHING
         """
         
         for attempt in range(Config.MAX_RETRIES):

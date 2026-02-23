@@ -47,11 +47,11 @@ CREATE TABLE kafka.kafka_messages (
     message_value JSONB NOT NULL,
     topic VARCHAR(255) NOT NULL,
     partition INTEGER NOT NULL,
-    offset BIGINT NOT NULL,
+    "offset" BIGINT NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE,
     consumed_at TIMESTAMP WITH TIME ZONE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT unique_message UNIQUE (topic, partition, offset)
+    CONSTRAINT unique_message UNIQUE (topic, partition, "offset")
 );
 
 \echo 'Table kafka.kafka_messages created successfully'
@@ -60,7 +60,7 @@ CREATE TABLE kafka.kafka_messages (
 CREATE INDEX idx_kafka_messages_topic ON kafka.kafka_messages(topic);
 CREATE INDEX idx_kafka_messages_timestamp ON kafka.kafka_messages(timestamp);
 CREATE INDEX idx_kafka_messages_consumed_at ON kafka.kafka_messages(consumed_at);
-CREATE INDEX idx_kafka_messages_partition_offset ON kafka.kafka_messages(partition, offset);
+CREATE INDEX idx_kafka_messages_partition_offset ON kafka.kafka_messages(partition, "offset");
 CREATE INDEX idx_kafka_messages_value ON kafka.kafka_messages USING GIN (message_value);
 
 \echo 'Indexes created successfully'
@@ -77,13 +77,13 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA kafka GRANT ALL ON SEQUENCES TO manfred;
 
 -- Create a view for easy querying of recent messages
 CREATE VIEW kafka.recent_messages AS
-SELECT 
+SELECT
     id,
     message_key,
     message_value,
     topic,
     partition,
-    offset,
+    "offset",
     timestamp,
     consumed_at,
     created_at
@@ -144,7 +144,7 @@ INSERT INTO kafka.kafka_messages (
     message_value,
     topic,
     partition,
-    offset,
+    "offset",
     timestamp,
     consumed_at
 ) VALUES (
