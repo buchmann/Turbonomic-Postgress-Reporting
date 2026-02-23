@@ -28,8 +28,8 @@ RUN apt-get update && \
     libpq5 && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy Python dependencies from builder
-COPY --from=builder /root/.local /root/.local
+# Copy Python dependencies from builder to a location accessible by all users
+COPY --from=builder /root/.local /usr/local
 
 # Copy application code
 COPY consumer.py .
@@ -42,7 +42,7 @@ RUN useradd -m -u 1000 appuser && \
 USER appuser
 
 # Make sure scripts in .local are usable
-ENV PATH=/root/.local/bin:$PATH
+ENV PATH=/usr/local/bin:$PATH
 
 # Set Python to run in unbuffered mode for better logging
 ENV PYTHONUNBUFFERED=1

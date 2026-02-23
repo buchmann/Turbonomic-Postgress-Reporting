@@ -21,8 +21,8 @@ spec:
     spec:
       containers:
       - name: consumer
-        image: kafka-postgres-consumer:latest  # Replace with your image
-        imagePullPolicy: IfNotPresent
+        image: mbx1010/kafka-postgres-consumer:latest
+        imagePullPolicy: Always
         
         # Environment variables from ConfigMap
         envFrom:
